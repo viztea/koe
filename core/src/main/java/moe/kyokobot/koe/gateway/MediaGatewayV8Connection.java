@@ -65,7 +65,7 @@ public class MediaGatewayV8Connection extends AbstractMediaGatewayConnection {
         var op = object.getInt("op");
 
         if (object.has("s")) {
-	        sequence = object.getInt("seq");
+            sequence = object.getInt("seq");
         }
 
         switch (op) {
@@ -92,6 +92,7 @@ public class MediaGatewayV8Connection extends AbstractMediaGatewayConnection {
 
                 connection.getDispatcher().gatewayReady((InetSocketAddress) address, ssrc);
                 logger.debug("Voice READY, ssrc: {}", ssrc);
+                sendInternalPayload(Op.MEDIA_SINK_WANTS, new JsonObject().add("any", 0));
                 selectProtocol("udp");
                 break;
             }
@@ -135,7 +136,7 @@ public class MediaGatewayV8Connection extends AbstractMediaGatewayConnection {
                 connection.getDispatcher().userDisconnected(user);
                 break;
             }
-            case Op.VIDEO_SINK_WANTS: {
+            case Op.MEDIA_SINK_WANTS: {
                 // Sent only if `video` flag was true while identifying. At time of writing this comment Discord forces
                 // it to false on bots (so.. user bot time? /s) due to voice server bug that broke clients or something.
                 // After receiving this opcode client can send op 12 with ssrcs for video (audio + 1)
@@ -182,7 +183,7 @@ public class MediaGatewayV8Connection extends AbstractMediaGatewayConnection {
     private void heartbeat() {
         this.lastHeartbeatSent = System.currentTimeMillis();
         sendInternalPayload(Op.HEARTBEAT, new JsonObject()
-            .add("t", System.currentTimeMillis())
+                .add("t", System.currentTimeMillis())
                 .add("seq_ack", sequence));
     }
 

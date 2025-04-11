@@ -36,6 +36,8 @@ subprojects {
         version = gitVersion[0]
     }
 
+    println("version: " + project.version)
+
     sourceCompatibility = 11
     targetCompatibility = 11
 
