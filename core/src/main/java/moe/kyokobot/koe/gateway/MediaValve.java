@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * Tracks the video streams of each user connected to the Voice channel and disables their incoming packets.
  */
 class MediaValve {
     private static final Logger LOG = LoggerFactory.getLogger(MediaValve.class.getName());
