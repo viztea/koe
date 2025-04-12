@@ -93,7 +93,7 @@ public class MediaGatewayV8Connection extends AbstractMediaGatewayConnection {
 
                 connection.getDispatcher().gatewayReady((InetSocketAddress) address, ssrc);
                 logger.debug("Voice READY, ssrc: {}", ssrc);
-                this.mediaValve.send();
+                mediaValve.send();
                 selectProtocol("udp");
                 break;
             }
@@ -123,8 +123,8 @@ public class MediaGatewayV8Connection extends AbstractMediaGatewayConnection {
                 break;
             }
             case Op.CLIENT_CONNECT: {
-                this.mediaValve.handle(object);
-                this.mediaValve.send();
+                mediaValve.handle(object);
+                mediaValve.send();
 
                 var data = object.getObject("d");
                 var user = data.getString("user_id");
@@ -135,8 +135,8 @@ public class MediaGatewayV8Connection extends AbstractMediaGatewayConnection {
                 break;
             }
             case Op.CLIENT_DISCONNECT: {
-                this.mediaValve.handle(object);
-                this.mediaValve.send();
+                mediaValve.handle(object);
+                mediaValve.send();
 
                 var data = object.getObject("d");
                 var user = data.getString("user_id");

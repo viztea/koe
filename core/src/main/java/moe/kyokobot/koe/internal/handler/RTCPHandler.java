@@ -7,11 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RTCPHandler extends SimpleChannelInboundHandler<DatagramPacket> {
-    private static final Logger LOGGER = LoggerFactory.getLogger("koe.udp");
+    private static final Logger LOG = LoggerFactory.getLogger("koe.udp");
 
     // https://tools.ietf.org/html/rfc3550#section-6
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) {
-        LOGGER.trace("Received UDP packet: {}", packet);
+        LOG.trace("Received UDP packet: {}", packet);
     }
 }
