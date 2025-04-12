@@ -118,7 +118,6 @@ public class MediaGatewayV5Connection extends AbstractMediaGatewayConnection {
             }
             case Op.CLIENT_CONNECT: {
                 mediaValve.handle(object);
-                mediaValve.send();
 
                 var data = object.getObject("d");
                 var user = data.getString("user_id");
@@ -130,7 +129,6 @@ public class MediaGatewayV5Connection extends AbstractMediaGatewayConnection {
             }
             case Op.CLIENT_DISCONNECT: {
                 mediaValve.handle(object);
-                mediaValve.send();
 
                 var data = object.getObject("d");
                 var user = data.getString("user_id");

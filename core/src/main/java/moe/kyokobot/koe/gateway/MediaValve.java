@@ -49,10 +49,10 @@ class MediaValve {
      */
     public void handle(JsonObject obj) {
         int op = obj.getInt("op");
-        JsonObject d = obj.getObject("d");
-        String userId = d.getString("user_id");
-
         if (op == Op.CLIENT_CONNECT) {
+            JsonObject d = obj.getObject("d");
+            String userId = d.getString("user_id");
+
             // if `video_ssrc` is 0, it indicates that the user is not showing their camera.
             if (d.getInt("video_ssrc") == 0) {
                 this.removeUser(userId);
@@ -69,13 +69,15 @@ class MediaValve {
             LOG.debug("Received streams for user {}: {}", d, Arrays.toString(ssrcs));
 
             this.unwantedSsrcs.put(userId, ssrcs);
+            this.send();
         } else if (op == Op.CLIENT_DISCONNECT) {
-            this.removeUser(userId);
+            this.removeUser(obj.getObject("d").getString("user_id"));
         }
     }
 
     void removeUser(String userId) {
         LOG.debug("Removing streams for user {}", userId);
         this.unwantedSsrcs.remove(userId);
+        this.send();
     }
 }
