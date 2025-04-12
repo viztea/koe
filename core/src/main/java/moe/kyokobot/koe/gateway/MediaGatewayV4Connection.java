@@ -88,7 +88,6 @@ public class MediaGatewayV4Connection extends AbstractMediaGatewayConnection {
 
                 connection.getDispatcher().gatewayReady((InetSocketAddress) address, ssrc);
                 logger.debug("Got READY, ssrc: {}", ssrc);
-                sendInternalPayload(Op.MEDIA_SINK_WANTS, new JsonObject().add("any", 0));
                 selectProtocol("udp");
                 break;
             }

@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 public class MediaGatewayV8Connection extends AbstractMediaGatewayConnection {
     private static final Logger logger = LoggerFactory.getLogger(MediaGatewayV8Connection.class);
 
+    private final MediaValve mediaValve = new MediaValve(this);
     private int ssrc;
     private SocketAddress address;
     private List<String> encryptionModes;
@@ -92,7 +93,7 @@ public class MediaGatewayV8Connection extends AbstractMediaGatewayConnection {
 
                 connection.getDispatcher().gatewayReady((InetSocketAddress) address, ssrc);
                 logger.debug("Voice READY, ssrc: {}", ssrc);
-                sendInternalPayload(Op.MEDIA_SINK_WANTS, new JsonObject().add("any", 0));
+                this.mediaValve.send();
                 selectProtocol("udp");
                 break;
             }
@@ -122,6 +123,9 @@ public class MediaGatewayV8Connection extends AbstractMediaGatewayConnection {
                 break;
             }
             case Op.CLIENT_CONNECT: {
+                this.mediaValve.handle(object);
+                this.mediaValve.send();
+
                 var data = object.getObject("d");
                 var user = data.getString("user_id");
                 var audioSsrc = data.getInt("audio_ssrc", 0);
@@ -131,6 +135,9 @@ public class MediaGatewayV8Connection extends AbstractMediaGatewayConnection {
                 break;
             }
             case Op.CLIENT_DISCONNECT: {
+                this.mediaValve.handle(object);
+                this.mediaValve.send();
+
                 var data = object.getObject("d");
                 var user = data.getString("user_id");
                 connection.getDispatcher().userDisconnected(user);
